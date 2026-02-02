@@ -32,7 +32,7 @@ BLED_RISK = {0: 1.1, 1: 1.0, 2: 1.9, 3: 3.7, 4: 8.7, 5: 12.5}
 
 # --- 5. SIDEBAR NAVIGATION & DISCLAIMER ---
 with st.sidebar:
-    st.title("🧰 MedCalc Menu")
+    st.title("CHADS-BLED Benefit Calculator")
     st.divider()
     
     # Reset Button
