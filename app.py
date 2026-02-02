@@ -65,3 +65,12 @@ else:
 st.subheader("📋 Clinical Note (Copy/Paste)")
 note = f"CHADS-BLED Calc: CHA2DS2-VASc {chads} ({stroke_risk}%/yr); HAS-BLED {has_bled} ({bleed_risk}%/yr). Net Benefit: {net_benefit:.1f}%."
 st.code(note, language="text")
+
+# Reset Button
+reset_btn = ui.Button(title="Clear / New Patient")
+reset_btn.frame = (20, 600, 310, 45)
+reset_btn.background_color = ui.COLOR_SYSTEM_GRAY
+reset_btn.tint_color = ui.COLOR_WHITE
+reset_btn.corner_radius = 10
+reset_btn.action = reset_all
+view.add_subview(reset_btn)
