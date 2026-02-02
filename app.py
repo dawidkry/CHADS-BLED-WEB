@@ -1,11 +1,10 @@
 import streamlit as st
 
-# --- 1. SESSION STATE INITIALIZATION (The Reset Logic) ---
+# --- 1. SESSION STATE INITIALIZATION ---
 if 'reset_key' not in st.session_state:
     st.session_state.reset_key = 0
 
 def reset_callback():
-    # Incrementing the key forces all widgets to re-render from scratch
     st.session_state.reset_key += 1
 
 # --- 2. CLINICAL DATA TABLES ---
@@ -15,25 +14,29 @@ BLED_RISK = {0: 1.1, 1: 1.0, 2: 1.9, 3: 3.7, 4: 8.7, 5: 12.5}
 # --- 3. PAGE CONFIGURATION ---
 st.set_page_config(page_title="CHADS-BLED Benefit Calc", page_icon="🩺", layout="centered")
 
-# --- 4. SIDEBAR NAVIGATION ---
+# --- 4. SIDEBAR NAVIGATION & DISCLAIMER ---
 with st.sidebar:
     st.title("🧰 MedCalc Menu")
-    st.write("**Tool:** CHADS-BLED Benefit")
     st.divider()
-    # The Reset Button calls the callback function
+    
+    # Reset Button
     st.button("Clear / New Patient", on_click=reset_callback)
+    
     st.divider()
     st.header("Clinical Evidence")
-    st.caption("CHA₂DS₂-VASc: Lip GY, et al. (2010)")
-    st.caption("HAS-BLED: Pisters R, et al. (2010)")
+    st.caption("**CHA₂DS₂-VASc:** Lip GY, et al. (2010)")
+    st.caption("**HAS-BLED:** Pisters R, et al. (2010)")
+    
     st.divider()
-    st.caption("Decision Support Tool v2.1")
+    # THE CLINICAL DISCLAIMER
+    st.warning("⚠️ **Disclaimer:** This tool is for clinical decision support only and does not replace professional medical judgment or institutional protocols.")
+    st.caption("Decision Support Tool v2.2")
 
 # --- 5. CHADS-BLED CALCULATOR ---
 st.title("⚖️ Stroke vs. Bleed Risk")
 st.markdown("### Integrated Assessment")
 
-# Every input widget now has a unique 'key' tied to st.session_state.reset_key
+# Inputs with reset keys
 age = st.slider("Patient Age", 18, 100, 65, key=f"age_{st.session_state.reset_key}")
 
 col1, col2 = st.columns(2)
