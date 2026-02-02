@@ -5,7 +5,8 @@ CHADS_RISK = {0: 0, 1: 1.3, 2: 2.2, 3: 3.2, 4: 4.0, 5: 6.7, 6: 9.8, 7: 9.6, 8: 6
 BLED_RISK = {0: 1.1, 1: 1.0, 2: 1.9, 3: 3.7, 4: 8.7, 5: 12.5}
 
 # --- 2. PAGE CONFIGURATION ---
-st.set_page_config(page_title="CHADS-BLED Benefit Calc", page_icon="⚖️")
+# Note: Changing 'page_icon' here updates your iPad Home Screen icon!
+st.set_page_config(page_title="CHADS-BLED Benefit Calc", page_icon="🩺")
 
 st.title("⚖️ CHADS-BLED Benefit Calc")
 st.markdown("### Integrated Stroke vs. Bleed Risk Assessment")
@@ -17,6 +18,10 @@ with st.sidebar:
     st.write("**HAS-BLED:** Pisters R, et al. (2010)")
     st.divider()
     st.caption("This tool is for clinical decision support and does not replace professional judgment.")
+    
+    # Simple Reset Button in Sidebar
+    if st.button("Clear / New Patient"):
+        st.rerun()
 
 # --- 4. INPUT SECTION ---
 age = st.slider("Patient Age", 18, 100, 65)
@@ -26,22 +31,23 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("Stroke Factors")
     female = st.checkbox("Female Sex")
-    htn = st.checkbox("Hypertension")
+    htn_chads = st.checkbox("Hypertension (CHADS)")
     hf = st.checkbox("Heart Failure History")
     dm = st.checkbox("Diabetes")
-    stroke = st.checkbox("Stroke/TIA History")
+    stroke_chads = st.checkbox("Stroke/TIA History")
     vasc = st.checkbox("Vascular Disease (MI/PAD)")
 
 with col2:
     st.subheader("Bleed Factors")
+    htn_bled = st.checkbox("Uncontrolled HTN (>160 SBP)")
     renal = st.checkbox("Renal Impairment")
     liver = st.checkbox("Liver Impairment")
     bleed = st.checkbox("Prior Major Bleed")
-    drugs = st.checkbox("Antiplatelets / Alcohol")
+    drugs = st.checkbox("Antiplatelets / Alcohol Use")
 
 # --- 5. CALCULATION LOGIC ---
-chads = sum([age >= 75, age >= 65, female, htn, dm, stroke*2, hf, vasc])
-has_bled = sum([htn, renal, liver, stroke, bleed, age >= 65, drugs])
+chads = sum([age >= 75, age >= 65, female, htn_chads, dm, stroke_chads*2, hf, vasc])
+has_bled = sum([htn_bled, renal, liver, stroke_chads, bleed, age >= 65, drugs])
 
 stroke_risk = CHADS_RISK.get(chads, 15.2)
 bleed_risk = BLED_RISK.get(has_bled, 12.5)
@@ -65,12 +71,3 @@ else:
 st.subheader("📋 Clinical Note (Copy/Paste)")
 note = f"CHADS-BLED Calc: CHA2DS2-VASc {chads} ({stroke_risk}%/yr); HAS-BLED {has_bled} ({bleed_risk}%/yr). Net Benefit: {net_benefit:.1f}%."
 st.code(note, language="text")
-
-# Reset Button
-reset_btn = ui.Button(title="Clear / New Patient")
-reset_btn.frame = (20, 600, 310, 45)
-reset_btn.background_color = ui.COLOR_SYSTEM_GRAY
-reset_btn.tint_color = ui.COLOR_WHITE
-reset_btn.corner_radius = 10
-reset_btn.action = reset_all
-view.add_subview(reset_btn)
