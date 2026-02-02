@@ -12,11 +12,11 @@ CHADS_RISK = {0: 0, 1: 1.3, 2: 2.2, 3: 3.2, 4: 4.0, 5: 6.7, 6: 9.8, 7: 9.6, 8: 6
 BLED_RISK = {0: 1.1, 1: 1.0, 2: 1.9, 3: 3.7, 4: 8.7, 5: 12.5}
 
 # --- 3. PAGE CONFIGURATION ---
-st.set_page_config(page_title="CHADS-BLED Benefit Calc", page_icon="🩺", layout="centered")
+st.set_page_config(page_title="CHADS-BLED Benefit Calculator", page_icon="🩺", layout="centered")
 
 # --- 4. SIDEBAR NAVIGATION & DISCLAIMER ---
 with st.sidebar:
-    st.title("🧰 MedCalc Menu")
+    st.title("CHADS-BLED Benefit Calculator")
     st.divider()
     
     # Reset Button
@@ -28,13 +28,12 @@ with st.sidebar:
     st.caption("**HAS-BLED:** Pisters R, et al. (2010)")
     
     st.divider()
-    # THE CLINICAL DISCLAIMER
     st.warning("⚠️ **Disclaimer:** This tool is for clinical decision support only and does not replace professional medical judgment or institutional protocols.")
-    st.caption("Decision Support Tool v2.2")
+    st.caption("v2.3 | Decision Support")
 
-# --- 5. CHADS-BLED CALCULATOR ---
-st.title("⚖️ Stroke vs. Bleed Risk")
-st.markdown("### Integrated Assessment")
+# --- 5. MAIN CALCULATOR ---
+st.title("⚖️ CHADS-BLED Benefit Calculator")
+st.markdown("### Integrated Stroke vs. Bleed Risk Assessment")
 
 # Inputs with reset keys
 age = st.slider("Patient Age", 18, 100, 65, key=f"age_{st.session_state.reset_key}")
@@ -83,5 +82,5 @@ else:
 
 # --- 8. CLINICAL NOTE GENERATOR ---
 st.subheader("📋 Clinical Note")
-note = f"CHADS-BLED Calc: CHA2DS2-VASc {chads} ({s_risk}%/yr); HAS-BLED {has_bled} ({b_risk}%/yr). Net Benefit: {net:.1f}%."
+note = f"CHADS-BLED Benefit Calculator: CHA2DS2-VASc {chads} ({s_risk}%/yr); HAS-BLED {has_bled} ({b_risk}%/yr). Net Benefit: {net:.1f}%."
 st.code(note, language="text")
