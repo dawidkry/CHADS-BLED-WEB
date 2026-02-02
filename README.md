@@ -18,5 +18,8 @@ making process for anticoagulation.
 ## ⚖️ License
 Licensed under the [MIT License](LICENSE).
 
+## ⚖️ Disclaimer
+This tool is intended for healthcare professionals for educational and supportive purposes. Clinical decisions should be made based on complete patient evaluation and institutional protocols.
+
 ---
 *© 2024 Dawid Krynicki - All Rights Reserved*
