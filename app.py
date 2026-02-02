@@ -1,22 +1,38 @@
 import streamlit as st
 
-# --- 1. SESSION STATE INITIALIZATION ---
+# --- 1. SESSION STATE INITIALIZATION (Ensures "Clear" button wipes inputs) ---
 if 'reset_key' not in st.session_state:
     st.session_state.reset_key = 0
 
 def reset_callback():
     st.session_state.reset_key += 1
 
-# --- 2. CLINICAL DATA TABLES ---
+# --- 2. PAGE CONFIGURATION ---
+st.set_page_config(
+    page_title="CHADS-BLED Benefit Calculator", 
+    page_icon="🩺", 
+    layout="centered"
+)
+
+# --- 3. CSS INJECTION (Hides "Made with Streamlit", Fork button, and Menu) ---
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            .stAppDeployButton {display:none;}
+            #stDecoration {display:none;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
+# --- 4. CLINICAL DATA TABLES ---
 CHADS_RISK = {0: 0, 1: 1.3, 2: 2.2, 3: 3.2, 4: 4.0, 5: 6.7, 6: 9.8, 7: 9.6, 8: 6.7, 9: 15.2}
 BLED_RISK = {0: 1.1, 1: 1.0, 2: 1.9, 3: 3.7, 4: 8.7, 5: 12.5}
 
-# --- 3. PAGE CONFIGURATION ---
-st.set_page_config(page_title="CHADS-BLED Benefit Calculator", page_icon="🩺", layout="centered")
-
-# --- 4. SIDEBAR NAVIGATION & DISCLAIMER ---
+# --- 5. SIDEBAR NAVIGATION & DISCLAIMER ---
 with st.sidebar:
-    st.title("CHADS-BLED Benefit Calculator")
+    st.title("🧰 MedCalc Menu")
     st.divider()
     
     # Reset Button
@@ -28,14 +44,14 @@ with st.sidebar:
     st.caption("**HAS-BLED:** Pisters R, et al. (2010)")
     
     st.divider()
-    st.warning("⚠️ **Disclaimer:** This tool is for clinical decision support only and does not replace professional medical judgment or institutional protocols.")
-    st.caption("v2.3 | Decision Support")
+    st.warning("⚠️ **Disclaimer:** This tool is for clinical decision support only and does not replace professional medical judgment.")
+    st.caption("v2.4 | Decision Support")
 
-# --- 5. MAIN CALCULATOR ---
+# --- 6. MAIN CALCULATOR ---
 st.title("⚖️ CHADS-BLED Benefit Calculator")
 st.markdown("### Integrated Stroke vs. Bleed Risk Assessment")
 
-# Inputs with reset keys
+# Inputs tied to reset_key
 age = st.slider("Patient Age", 18, 100, 65, key=f"age_{st.session_state.reset_key}")
 
 col1, col2 = st.columns(2)
@@ -58,7 +74,7 @@ with col2:
     bleed = st.checkbox("Prior Major Bleed", key=f"bld_{st.session_state.reset_key}")
     drugs = st.checkbox("NSAIDs / Alcohol", help="Antiplatelets or >8 drinks/week", key=f"drg_{st.session_state.reset_key}")
 
-# --- 6. CALCULATION LOGIC ---
+# --- 7. CALCULATION LOGIC ---
 chads = sum([age >= 75, age >= 65, female, htn_chads, dm, stroke_chads*2, hf, vasc])
 has_bled = sum([htn_bled, renal, liver, stroke_chads, bleed, age >= 65, drugs])
 
@@ -66,7 +82,7 @@ s_risk = CHADS_RISK.get(chads, 15.2)
 b_risk = BLED_RISK.get(has_bled, 12.5)
 net = s_risk - b_risk
 
-# --- 7. DISPLAY RESULTS ---
+# --- 8. DISPLAY RESULTS ---
 st.divider()
 res_col1, res_col2 = st.columns(2)
 
@@ -80,7 +96,7 @@ elif net < 0:
 else:
     st.warning(f"**Equivocal Benefit: {net:.1f}%**")
 
-# --- 8. CLINICAL NOTE GENERATOR ---
+# --- 9. CLINICAL NOTE GENERATOR ---
 st.subheader("📋 Clinical Note")
 note = f"CHADS-BLED Benefit Calculator: CHA2DS2-VASc {chads} ({s_risk}%/yr); HAS-BLED {has_bled} ({b_risk}%/yr). Net Benefit: {net:.1f}%."
 st.code(note, language="text")
