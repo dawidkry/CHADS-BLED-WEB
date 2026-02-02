@@ -17,3 +17,6 @@ making process for anticoagulation.
 
 ## ⚖️ License
 Licensed under the [MIT License](LICENSE).
+
+---
+*© 2024 Dawid Krynicki - All Rights Reserved*
