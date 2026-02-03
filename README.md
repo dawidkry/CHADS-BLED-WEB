@@ -1,3 +1,5 @@
+![IMG_0568](https://github.com/user-attachments/assets/de7796c6-ac18-408c-8405-b922f192f478)
+
 # CHADS-BLED-WEB
 CHADS-BLED Benefit Calc Web App
 # CHADS-BLED Benefit Calc ⚖️
@@ -23,3 +25,5 @@ This tool is intended for healthcare professionals for educational and supportiv
 
 ---
 *Copyright (c) 2026 dawidkry - All Rights Reserved*
+
+
