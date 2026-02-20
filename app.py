@@ -107,7 +107,7 @@ st.divider()
 st.header("Step 3: Clinical Summary")
 
 # Professional prompt for EHR/EMR documentation
-patient_id = st.text_input("Patient Identifier (e.g., Initials or ID):", key=f"pid_{st.session_state.reset_key}")
+patient_id = st.text_input("DO NOT add patient identifiers: NHS/MRN, DOB etc.)", key=f"pid_{st.session_state.reset_key}")
 st.caption("⚠️ DO NOT add sensitive patient identifiers (NHS/MRN, Full Name, or DOB) to this public-facing tool.")
 
 # Logic for recommendation text based on the Net Benefit
