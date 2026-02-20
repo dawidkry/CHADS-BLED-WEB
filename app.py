@@ -100,3 +100,63 @@ else:
 st.subheader("📋 Clinical Note")
 note = f"CHADS-BLED Benefit Calculator: CHA2DS2-VASc {chads} ({s_risk}%/yr); HAS-BLED {has_bled} ({b_risk}%/yr). Net Benefit: {net:.1f}%."
 st.code(note, language="text")
+
+
+# --- 10. SUMMARY & DOWNLOAD ---
+st.divider()
+st.header("Step 3: Clinical Summary")
+
+# Professional prompt for EHR/EMR documentation
+patient_id = st.text_input("Patient Identifier (e.g., Initials or ID):", key=f"pid_{st.session_state.reset_key}")
+st.caption("⚠️ DO NOT add sensitive patient identifiers (NHS/MRN, Full Name, or DOB) to this public-facing tool.")
+
+# Logic for recommendation text based on the Net Benefit
+if net > 1.5:
+    recommendation = "Anticoagulation (OAC) strongly favored based on stroke vs. bleed risk profile."
+    risk_cat = "High Stroke Risk / Favorable Net Benefit"
+elif net < 0:
+    recommendation = "High bleeding risk relative to stroke benefit. Consider observation or addressing modifiable bleed factors."
+    risk_cat = "High Bleeding Risk / Negative Net Benefit"
+else:
+    recommendation = "Equivocal benefit. Clinical correlation and patient preference required."
+    risk_cat = "Moderate/Equivocal Benefit"
+
+if st.button("Generate Formal Summary"):
+    import datetime
+    
+    summary_text = f"""
+ANTICOAGULATION BENEFIT ASSESSMENT
+Date: {datetime.date.today()}
+Patient ID: {patient_id if patient_id else "Not Provided"}
+-------------------------------------------
+STROKE RISK (CHA2DS2-VASc): {chads}
+Estimated Annual Stroke Risk: {s_risk}% 
+
+BLEED RISK (HAS-BLED): {has_bled}
+Estimated Annual Major Bleed Risk: {b_risk}%
+
+NET CLINICAL BENEFIT: {net:.1f}% 
+(Estimated absolute reduction in events per year)
+
+MANAGEMENT PLAN:
+- Status: {risk_cat}
+- Recommendation: {recommendation}
+
+Note: Discussed the trade-off between stroke prevention and major hemorrhage. 
+The patient's individual values and modifiable risks (BP, NSAIDs, ETOH) 
+were considered in this assessment.
+-------------------------------------------
+Documented via: Personal App Library (CHADS-BLED Tool)
+    """
+    
+    # Display for easy copy-pasting into clinical notes
+    st.text_area("Copy to Patient Notes:", summary_text, height=350)
+    
+    # Download functionality
+    safe_id = patient_id.replace(" ", "_") if patient_id else "Assessment"
+    st.download_button(
+        label="Download Summary (.txt)",
+        data=summary_text,
+        file_name=f"AF_Assessment_{safe_id}_{datetime.date.today()}.txt",
+        mime="text/plain"
+    )
